@@ -1,23 +1,25 @@
 import { useState, useEffect } from 'react';
 import { ShoppingBag, BookOpen, DollarSign, Calendar, RefreshCw } from 'lucide-react';
 import useWalletStore from '../stores/walletStore';
-import { apiService } from '../services/api';
 import { Course } from '../types';
-import { formatEther, formatDate } from '../utils/format';
 import toast from 'react-hot-toast';
 
 export function PurchasedCourses() {
-  const { account, isConnected } = useWalletStore();
+  const { address, isConnected } = useWalletStore();
   const [courses, setCourses] = useState<Course[]>([]);
   const [loading, setLoading] = useState(false);
 
   const loadPurchasedCourses = async () => {
-    if (!account || !isConnected) return;
+    if (!address || !isConnected) return;
     
     setLoading(true);
     try {
-      const purchasedCourses = await apiService.getUserPurchasedCourses(account);
-      setCourses(purchasedCourses);
+      // 这里需要根据实际的合约接口调整
+      // const purchasedCourses = await getPurchasedCourses();
+      // setCourses(purchasedCourses);
+      
+      // 临时示例数据
+      setCourses([]);
     } catch (error) {
       console.error('Failed to load purchased courses:', error);
       toast.error('加载已购课程失败');
@@ -28,7 +30,7 @@ export function PurchasedCourses() {
 
   useEffect(() => {
     loadPurchasedCourses();
-  }, [account, isConnected]);
+  }, [address, isConnected]);
 
   if (!isConnected) {
     return (
@@ -82,7 +84,7 @@ export function PurchasedCourses() {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           {courses.map((course) => (
             <div
-              key={course.courseId}
+              key={course.id}
               className="glass-effect rounded-xl p-6 hover:bg-white hover:bg-opacity-10 transition-all duration-200"
             >
               <div className="flex items-start justify-between mb-4">
@@ -90,7 +92,7 @@ export function PurchasedCourses() {
                   {course.title}
                 </h3>
                 <div className="glass-effect rounded-lg px-3 py-1 ml-4">
-                  <span className="text-white text-sm">#{course.courseId}</span>
+                  <span className="text-white text-sm">#{course.id}</span>
                 </div>
               </div>
 
@@ -101,12 +103,12 @@ export function PurchasedCourses() {
               <div className="space-y-2">
                 <div className="flex items-center space-x-2 text-white opacity-80">
                   <DollarSign size={14} />
-                  <span className="text-sm">{formatEther(course.price)} ETH</span>
+                  <span className="text-sm">{course.price} ETH</span>
                 </div>
                 
                 <div className="flex items-center space-x-2 text-white opacity-80">
                   <Calendar size={14} />
-                  <span className="text-sm">发布于 {formatDate(course.createdAt)}</span>
+                  <span className="text-sm">课程时长: {course.duration}</span>
                 </div>
               </div>
 
