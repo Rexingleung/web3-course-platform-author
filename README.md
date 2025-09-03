@@ -1,263 +1,267 @@
-# Web3 Course Platform - Author Frontend
+# Web3 课程平台作者端 - 自定义钱包头部组件
 
-基于区块链的课程平台作者端，使用 React + TypeScript + Vite + Tailwind CSS 构建。
+## 🚀 最新更新
 
-## 功能特性
+### 移除 wtf-lll-wallet 包并实现自定义钱包组件
 
-- ➕ **创建课程** - 发布新课程到区块链
-- 📚 **我的课程** - 管理已发布的课程
-- 🛍️ **已购课程** - 查看购买的课程
-- 💰 **Web3 钱包集成** - MetaMask 钱包连接
-- 🔗 **智能合约交互** - 直接与合约交互创建课程
-- 🎨 **现代UI设计** - 玻璃质感的响应式界面
+本次更新完全移除了对 `wtf-lll-wallet` 包的依赖，并实现了一个功能更强大的自定义钱包头部组件，专为作者平台设计。
 
-## 技术栈
+## ✨ 新功能
 
-- React 18
-- TypeScript
-- Vite
-- Tailwind CSS
-- Zustand (状态管理)
-- Ethers.js (Web3)
-- Lucide React (图标)
-- React Hot Toast (通知)
+### 🔗 网络切换支持
+- ✅ **Ethereum 主网** (0x1) - 生产环境
+- ✅ **Sepolia 测试网** (0xaa36a7) - 测试环境
+- 🔄 一键切换网络
+- 🟢 网络状态实时显示
 
-## 快速开始
+### 👤 ENS 集成
+- 🏷️ 自动解析 ENS 域名
+- 🖼️ 显示 ENS 头像
+- 🔍 主网 ENS 查询支持
 
-### 环境要求
+### 💳 钱包功能
+- 🔌 MetaMask 连接/断开
+- 💰 实时余额显示
+- 📋 一键复制地址
+- 🔗 区块浏览器链接
+- 🔄 钱包信息刷新
 
-- Node.js 16+
-- MetaMask 浏览器扩展
-- 连接到以太坊网络
-- 后端API服务运行在 http://localhost:3001
+### 📚 作者专属功能
+- ✍️ 课程创建和管理
+- 📊 课程统计查看
+- 💰 收益跟踪
+- 👥 学生管理
 
-### 1. 安装依赖
-
-```bash
-npm install
-```
-
-### 2. 启动开发服务器
-
-```bash
-npm run dev
-```
-
-应用将在 http://localhost:3000 启动
-
-### 3. 构建生产版本
-
-```bash
-npm run build
-npm run preview
-```
-
-## 项目结构
+## 📁 项目结构更新
 
 ```
 src/
-├── components/          # React 组件
-│   ├── Header.tsx       # 头部组件（钱包连接）
-│   ├── CreateCourse.tsx # 创建课程组件
-│   ├── MyCourses.tsx    # 我的课程组件
-│   ├── PurchasedCourses.tsx # 已购课程组件
-│   └── WalletProvider.tsx   # 钱包提供者
-├── stores/             # Zustand 状态管理
-│   ├── walletStore.ts  # 钱包状态
-│   └── contractStore.ts # 合约交互
-├── services/           # API 服务
-│   └── api.ts         # 后端 API 调用
-├── utils/             # 工具函数
-│   ├── constants.ts   # 常量配置
-│   └── format.ts      # 格式化工具
-├── types/             # TypeScript 类型
-│   └── index.ts
-├── App.tsx            # 主应用组件
-├── main.tsx           # 应用入口
-└── index.css          # 全局样式
+├── components/
+│   ├── Header.tsx              # 🆕 作者专属钱包头部组件
+│   ├── WalletProvider.tsx      # 🔄 更新的钱包提供者
+│   ├── CreateCourse.tsx        # 🔄 更新为使用新钱包存储
+│   ├── MyCourses.tsx           # 🔄 更新为使用新钱包存储
+│   └── PurchasedCourses.tsx    # 🔄 更新为使用新钱包存储
+├── stores/
+│   ├── walletStore.ts          # 🆕 自定义钱包状态管理
+│   └── contractStore.ts        # 🔄 更新为兼容新钱包接口及作者功能
+├── types/
+│   └── index.ts               # 🆕 新增钱包、网络和作者功能类型定义
+├── utils/
+│   └── networks.ts            # 🆕 网络配置和工具函数
+└── services/
+    └── api.ts                 # 📦 保持现有API服务
 ```
 
-## 主要组件
+## 🔧 技术实现
 
-### CreateCourse
-- 课程标题、描述和价格输入
-- 与智能合约交互创建课程
-- 表单验证和错误处理
-- 实时交易状态反馈
+### 钱包状态管理
+使用 Zustand 实现轻量级状态管理：
 
-### MyCourses  
-- 显示作者创建的所有课程
-- 课程详细信息展示
-- 发布状态管理
-- 课程统计信息
+```typescript
+interface WalletStore {
+  // 状态
+  address: string | null;
+  balance: string;
+  isConnected: boolean;
+  networkId: string | null;
+  ensName: string | null;
+  ensAvatar: string | null;
+  
+  // 操作
+  connectWallet: () => Promise<void>;
+  disconnectWallet: () => void;
+  switchNetwork: (chainId: string) => Promise<void>;
+  updateWalletInfo: () => Promise<void>;
+  getENSInfo: (address: string) => Promise<ENSInfo>;
+}
+```
 
-### PurchasedCourses
-- 显示作者购买的课程
-- 学习进度跟踪
-- 课程访问入口
+### 作者合约接口
+扩展的合约功能支持：
 
-### Header
-- 钱包连接/断开功能
-- 显示账户信息和余额
-- 响应钱包状态变化
-- 优雅的用户界面
+```typescript
+interface ContractStore {
+  // 作者功能
+  createCourse: (title: string, description: string, price: string) => Promise<void>;
+  getMyCourses: () => Promise<Course[]>;
+  updateCourse: (courseId: number, title: string, description: string, price: string) => Promise<void>;
+  deleteCourse: (courseId: number) => Promise<void>;
+  getCourseStats: (courseId: number) => Promise<CourseStats>;
+}
+```
 
-## 智能合约集成
+## 🎨 UI/UX 特色
 
-应用通过 ethers.js 与部署的智能合约交互：
+### 作者专属设计
+- 🎨 橙红色渐变主题（区别于用户端的紫蓝色）
+- ✏️ 创作者图标和品牌标识
+- 📊 专业的课程管理界面
+- 📈 统计数据可视化
 
-- 合约地址：`0xdDD30BD07C402eE78079c35A7DE2F9232ed54Aa4`
-- 支持功能：
-  - 创建课程 (`createCourse`)
-  - 查询课程信息 (`getCourse`)
-  - 查询用户购买记录 (`getUserPurchasedCourses`)
-  - 检查购买状态 (`hasUserPurchasedCourse`)
+### 现代化设计
+- 🌈 渐变背景和毛玻璃效果
+- ✨ 流畅的动画过渡
+- 📱 响应式设计
+- 🌙 深色主题
 
-## 状态管理
+### 头部组件功能
+- 🎨 作者平台专属 Logo 和标题
+- 🔗 网络选择器（主网/测试网）
+- 👛 钱包连接按钮
+- 👤 作者信息面板
+- 📋 快捷操作菜单
 
-### WalletStore
-- 管理钱包连接状态
-- 处理账户切换
-- 更新余额信息
-- 监听钱包事件
+## 🚀 使用方法
 
-### ContractStore  
-- 智能合约初始化
-- 合约方法调用
-- 交易状态管理
-- 错误处理
-
-## API 集成
-
-与后端服务通信获取：
-- 课程列表
-- 作者课程管理
-- 用户购买记录
-- 交易记录存储
-
-## 样式设计
-
-采用现代玻璃拟态设计：
-- 半透明玻璃效果
-- 渐变背景
-- 流动动画
-- 响应式布局
-- 深色主题
-
-### 主要样式特色
-
-- **玻璃效果**: `backdrop-filter: blur(10px)`
-- **渐变背景**: 蓝色到紫色的美丽渐变
-- **动态动画**: 浮动和悬停效果
-- **响应式网格**: 自适应不同屏幕尺寸
-
-## 用户体验
-
-### 钱包集成
-- 自动检测 MetaMask
-- 监听账户和网络变化
-- 友好的连接提示
-- 错误状态处理
-
-### 交易处理
-- 实时交易状态更新
-- 加载指示器
-- 成功/失败反馈
-- Gas 费用估算
-
-### 响应式设计
-- 移动端友好
-- 触摸优化
-- 快速加载
-- 平滑过渡
-
-## 开发指南
-
-### 环境配置
-
-1. 确保 MetaMask 已安装
-2. 连接到正确的以太坊网络
-3. 后端服务正常运行
-4. 智能合约正确部署
-
-### 调试技巧
-
-- 使用浏览器开发工具
-- 检查 MetaMask 连接状态
-- 监控网络请求
-- 查看控制台日志
-
-### 性能优化
-
-- 组件懒加载
-- 状态缓存
-- 防抖处理
-- 图片优化
-
-## 部署指南
-
-### 构建优化
-
+### 安装依赖
 ```bash
-npm run build
+# 移除旧包
+pnpm remove wtf-lll-wallet
+
+# 安装现有依赖
+pnpm install
 ```
 
-### 静态部署
-
-支持部署到：
-- Vercel
-- Netlify
-- GitHub Pages
-- AWS S3
-
-### 环境变量
-
-```env
-VITE_CONTRACT_ADDRESS=0xdDD30BD07C402eE78079c35A7DE2F9232ed54Aa4
-VITE_API_BASE_URL=http://localhost:3001/api
+### 启动开发服务器
+```bash
+pnpm dev
 ```
 
-## 故障排除
+### 连接钱包
+1. 点击右上角"连接钱包"按钮
+2. 在 MetaMask 中确认连接
+3. 自动检测网络并显示余额
+4. 可通过网络选择器切换网络
 
-### 常见问题
+### 创建课程
+1. 确保钱包已连接
+2. 填写课程标题、描述和价格
+3. 点击"创建课程"按钮
+4. 在 MetaMask 中确认交易
 
-1. **MetaMask 未检测到**
-   - 确保已安装 MetaMask 扩展
-   - 刷新页面重试
-   - 检查扩展是否启用
+### 管理课程
+1. 在"我的课程"标签查看已创建的课程
+2. 查看课程统计数据
+3. 编辑或删除课程（根据合约支持）
 
-2. **交易失败**
-   - 检查账户余额
-   - 确认网络连接
-   - 增加 Gas 限制
+## 🔐 安全特性
 
-3. **API 请求失败**
-   - 验证后端服务状态
-   - 检查网络连接
-   - 确认API端点正确
+- ✅ 只读钱包信息访问
+- ✅ 用户主动授权连接
+- ✅ 网络切换需用户确认
+- ✅ 交易签名确认
+- ✅ 地址格式化显示
+- ✅ 错误处理和用户提示
 
-### 调试工具
+## 🌐 ENS 支持
 
-- React Developer Tools
-- MetaMask Developer Tools
-- 浏览器网络面板
-- 控制台日志
+- 🔍 自动解析 ENS 域名
+- 🖼️ 获取和显示 ENS 头像
+- 🌐 仅在主网查询（优化性能）
+- 🔄 缓存机制（减少查询次数）
 
-## 脚本命令
+## 🔧 自定义配置
 
-- `npm run dev` - 开发模式
-- `npm run build` - 构建生产版本
-- `npm run preview` - 预览构建结果
-- `npm run lint` - 代码检查
+### 添加新网络
+在 `src/utils/networks.ts` 中添加新网络配置：
 
-## 贡献指南
+```typescript
+export const NETWORK_CONFIGS = {
+  // 现有网络...
+  '0x89': {
+    chainId: '0x89',
+    chainName: 'Polygon Mainnet',
+    // ... 其他配置
+  }
+};
+```
 
-1. Fork 项目
-2. 创建特性分支
-3. 提交更改
-4. 推送到分支
-5. 创建 Pull Request
+### 修改作者主题
+在 Header 组件中可自定义颜色主题：
 
-## 许可证
+```typescript
+// 橙红色主题（作者）
+className="bg-gradient-to-br from-orange-400 to-red-600"
 
-MIT License
+// 对比用户端的紫蓝色主题
+className="bg-gradient-to-br from-purple-400 to-blue-600"
+```
+
+## 📝 更新日志
+
+### v2.0.0 (当前)
+- ❌ 移除 wtf-lll-wallet 依赖
+- ✅ 实现自定义钱包头部组件
+- ✅ 添加网络切换功能（主网/测试网）
+- ✅ 集成 ENS 域名和头像
+- ✅ 优化作者端专属UI设计
+- ✅ 扩展合约接口支持作者功能
+- ✅ 改进错误处理和提示信息
+
+### v1.x.x (之前)
+- 使用 wtf-lll-wallet 包
+- 基础钱包连接功能
+- 基础课程创建功能
+
+## 🐛 已知问题
+
+- ENS 头像加载可能较慢（依赖网络）
+- 某些 ENS 域名可能无头像
+- 网络切换需要用户在 MetaMask 中确认
+- 合约方法需要根据实际部署情况调整
+
+## 🔮 未来计划
+
+- [ ] 支持更多网络（Polygon、BSC 等）
+- [ ] 添加课程销售统计图表
+- [ ] 实现课程版本管理
+- [ ] 集成 IPFS 存储课程内容
+- [ ] 添加学生评价和反馈系统
+- [ ] 实现多钱包支持
+- [ ] 集成 WalletConnect
+
+## 🎭 作者端 vs 用户端对比
+
+| 功能 | 作者端 | 用户端 |
+|------|--------|--------|
+| 主题色彩 | 橙红渐变 🔥 | 紫蓝渐变 💜 |
+| 主要功能 | 创建/管理课程 ✍️ | 购买/学习课程 📚 |
+| 图标标识 | 创作笔 🖋️ | 学习书本 📖 |
+| 平台名称 | Web3 作者平台 | Web3 课程平台 |
+| 核心用户 | 内容创作者 👨‍🏫 | 学习者 👨‍🎓 |
+
+## 🔄 迁移指南
+
+### 从 wtf-lll-wallet 迁移
+1. 更新 import 语句：
+```typescript
+// 旧的
+import { useWalletStore } from 'wtf-lll-wallet';
+
+// 新的
+import useWalletStore from '../stores/walletStore';
+```
+
+2. 更新字段名：
+```typescript
+// 旧的
+const { account, isConnected } = useWalletStore();
+
+// 新的
+const { address, isConnected } = useWalletStore();
+```
+
+3. 新增功能调用：
+```typescript
+// 网络切换
+const { switchNetwork } = useWalletStore();
+await switchNetwork('0x1'); // 切换到主网
+
+// ENS 信息
+const { ensName, ensAvatar } = useWalletStore();
+```
+
+---
+
+🎉 **恭喜！** 你的作者平台现在拥有了一个功能完整、界面美观的自定义钱包组件，完全摆脱了外部依赖，为创作者提供最佳的使用体验！

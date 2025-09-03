@@ -2,48 +2,49 @@ import { create } from 'zustand';
 import { ethers } from 'ethers';
 import toast from 'react-hot-toast';
 import { CONTRACT_ADDRESS, CONTRACT_ABI } from '../utils/constants';
-import { ContractState, Course } from '../types';
+import { ContractStore, Course } from '../types';
 import { parseEther } from '../utils/format';
 
-const useContractStore = create<ContractState>((set, get) => ({
+const useContractStore = create<ContractStore>((set, get) => ({
   contract: null,
-  provider: null,
-  signer: null,
-  isInitialized: false,
+  isLoading: false,
+  error: null,
 
   initializeContract: async () => {
     if (!window.ethereum) {
-      toast.error('请安装 MetaMask 钱包');
+      const error = '请安装 MetaMask 钱包';
+      set({ error });
+      toast.error(error);
       return;
     }
 
     try {
+      set({ isLoading: true, error: null });
+      
       const provider = new ethers.BrowserProvider(window.ethereum);
       const signer = await provider.getSigner();
       const contract = new ethers.Contract(CONTRACT_ADDRESS, CONTRACT_ABI, signer);
 
-      set({
-        contract,
-        provider,
-        signer,
-        isInitialized: true
-      });
-
+      set({ contract, isLoading: false });
       console.log('合约初始化成功');
     } catch (error: any) {
+      const errorMsg = '合约初始化失败';
       console.error('合约初始化失败:', error);
-      toast.error('合约初始化失败');
+      set({ error: errorMsg, isLoading: false });
+      toast.error(errorMsg);
     }
   },
 
   createCourse: async (title: string, description: string, price: string) => {
-    const { contract, isInitialized } = get();
+    const { contract } = get();
     
-    if (!isInitialized || !contract) {
+    if (!contract) {
       await get().initializeContract();
     }
 
     try {
+      set({ isLoading: true, error: null });
+      
       const priceWei = parseEther(price);
       const tx = await contract.createCourse(title, description, priceWei);
       
@@ -67,6 +68,7 @@ const useContractStore = create<ContractState>((set, get) => ({
         courseId = parsed?.args?.courseId?.toString();
       }
 
+      set({ isLoading: false });
       toast.success('课程创建成功！', { id: 'create-course' });
       
       return {
@@ -75,92 +77,166 @@ const useContractStore = create<ContractState>((set, get) => ({
         gasUsed: receipt.gasUsed?.toString()
       };
     } catch (error: any) {
+      const errorMsg = error.reason || error.message || '创建课程失败';
       console.error('创建课程失败:', error);
-      toast.error(error.reason || error.message || '创建课程失败', { id: 'create-course' });
+      set({ error: errorMsg, isLoading: false });
+      toast.error(errorMsg, { id: 'create-course' });
       throw error;
     }
   },
 
-  purchaseCourse: async (courseId: number, price: string) => {
-    const { contract, isInitialized } = get();
+  getMyCourses: async (): Promise<Course[]> => {
+    const { contract } = get();
     
-    if (!isInitialized || !contract) {
+    if (!contract) {
       await get().initializeContract();
     }
 
     try {
-      const priceWei = parseEther(price);
-      const tx = await contract.purchaseCourse(courseId, { value: priceWei });
+      set({ isLoading: true, error: null });
       
-      toast.loading('购买课程中...', { id: 'purchase-course' });
+      // 获取当前用户地址
+      const accounts = await window.ethereum.request({ method: 'eth_accounts' });
+      if (accounts.length === 0) {
+        throw new Error('请先连接钱包');
+      }
+      
+      const userAddress = accounts[0];
+      
+      // 这里需要根据实际合约接口调整
+      // 假设合约有一个方法可以获取作者创建的课程
+      const authorCourseIds = await contract.getAuthorCourses(userAddress);
+      
+      // 获取每个课程的详细信息
+      const courses: Course[] = [];
+      for (const courseId of authorCourseIds) {
+        try {
+          const courseData = await contract.getCourse(courseId);
+          courses.push({
+            id: Number(courseId),
+            courseId: Number(courseId),
+            title: courseData[0],
+            description: courseData[1],
+            author: courseData[2],
+            price: ethers.formatEther(courseData[3]),
+            createdAt: Number(courseData[4]),
+            instructor: courseData[2], // 使用作者作为讲师
+            duration: '待定', // 如果合约中没有这个字段
+            difficulty: 'Intermediate' as const,
+            rating: 0, // 初始值
+            studentsCount: 0, // 需要从合约获取
+            image: '/placeholder-course.jpg', // 默认图片
+            category: '区块链', // 默认分类
+          });
+        } catch (error) {
+          console.error(`获取课程 ${courseId} 信息失败:`, error);
+        }
+      }
+      
+      set({ isLoading: false });
+      return courses;
+    } catch (error: any) {
+      const errorMsg = error.message || '获取我的课程失败';
+      console.error('获取我的课程失败:', error);
+      set({ error: errorMsg, isLoading: false });
+      return [];
+    }
+  },
+
+  updateCourse: async (courseId: number, title: string, description: string, price: string) => {
+    const { contract } = get();
+    
+    if (!contract) {
+      await get().initializeContract();
+    }
+
+    try {
+      set({ isLoading: true, error: null });
+      
+      const priceWei = parseEther(price);
+      const tx = await contract.updateCourse(courseId, title, description, priceWei);
+      
+      toast.loading('更新课程中...', { id: 'update-course' });
       
       const receipt = await tx.wait();
       
-      toast.success('课程购买成功！', { id: 'purchase-course' });
+      set({ isLoading: false });
+      toast.success('课程更新成功！', { id: 'update-course' });
       
       return {
         transactionHash: receipt.hash,
         gasUsed: receipt.gasUsed?.toString()
       };
     } catch (error: any) {
-      console.error('购买课程失败:', error);
-      toast.error(error.reason || error.message || '购买课程失败', { id: 'purchase-course' });
+      const errorMsg = error.reason || error.message || '更新课程失败';
+      console.error('更新课程失败:', error);
+      set({ error: errorMsg, isLoading: false });
+      toast.error(errorMsg, { id: 'update-course' });
       throw error;
     }
   },
 
-  getCourse: async (courseId: number): Promise<Course> => {
-    const { contract, isInitialized } = get();
+  deleteCourse: async (courseId: number) => {
+    const { contract } = get();
     
-    if (!isInitialized || !contract) {
+    if (!contract) {
       await get().initializeContract();
     }
 
     try {
-      const courseData = await contract.getCourse(courseId);
+      set({ isLoading: true, error: null });
+      
+      const tx = await contract.deleteCourse(courseId);
+      
+      toast.loading('删除课程中...', { id: 'delete-course' });
+      
+      const receipt = await tx.wait();
+      
+      set({ isLoading: false });
+      toast.success('课程删除成功！', { id: 'delete-course' });
       
       return {
-        courseId,
-        title: courseData[0],
-        description: courseData[1],
-        author: courseData[2],
-        price: courseData[3].toString(),
-        createdAt: Number(courseData[4])
+        transactionHash: receipt.hash,
+        gasUsed: receipt.gasUsed?.toString()
       };
     } catch (error: any) {
-      console.error('获取课程信息失败:', error);
+      const errorMsg = error.reason || error.message || '删除课程失败';
+      console.error('删除课程失败:', error);
+      set({ error: errorMsg, isLoading: false });
+      toast.error(errorMsg, { id: 'delete-course' });
       throw error;
     }
   },
 
-  getUserPurchasedCourses: async (userAddress: string): Promise<number[]> => {
-    const { contract, isInitialized } = get();
+  getCourseStats: async (courseId: number) => {
+    const { contract } = get();
     
-    if (!isInitialized || !contract) {
+    if (!contract) {
       await get().initializeContract();
     }
 
     try {
-      const courseIds = await contract.getUserPurchasedCourses(userAddress);
-      return courseIds.map((id: any) => Number(id));
+      set({ isLoading: true, error: null });
+      
+      // 这里需要根据实际合约接口调整
+      const stats = await contract.getCourseStats(courseId);
+      
+      set({ isLoading: false });
+      
+      return {
+        totalSales: Number(stats[0]),
+        studentsCount: Number(stats[1]),
+        revenue: ethers.formatEther(stats[2]),
+      };
     } catch (error: any) {
-      console.error('获取用户购买课程失败:', error);
-      return [];
-    }
-  },
-
-  hasUserPurchasedCourse: async (courseId: number, userAddress: string): Promise<boolean> => {
-    const { contract, isInitialized } = get();
-    
-    if (!isInitialized || !contract) {
-      await get().initializeContract();
-    }
-
-    try {
-      return await contract.hasUserPurchasedCourse(courseId, userAddress);
-    } catch (error: any) {
-      console.error('检查购买状态失败:', error);
-      return false;
+      const errorMsg = error.message || '获取课程统计失败';
+      console.error('获取课程统计失败:', error);
+      set({ error: errorMsg, isLoading: false });
+      return {
+        totalSales: 0,
+        studentsCount: 0,
+        revenue: '0',
+      };
     }
   },
 }));
