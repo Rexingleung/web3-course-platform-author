@@ -19,7 +19,7 @@
     "react-hot-toast": "^2.4.1",
     "tailwindcss": "^4.1.12",
     "zustand": "^4.4.1",
-    "wtf-lll-wallet": "^0.0.4"
+    "wtf-lll-wallet": "^0.0.5"
   },
   "devDependencies": {
     "@types/react": "^18.2.15",
