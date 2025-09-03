@@ -5,7 +5,7 @@ import useContractStore from '../stores/contractStore';
 import toast from 'react-hot-toast';
 
 export function CreateCourse() {
-  const { isConnected, account } = useWalletStore();
+  const { isConnected, address } = useWalletStore();
   const { createCourse } = useContractStore();
   
   const [formData, setFormData] = useState({
