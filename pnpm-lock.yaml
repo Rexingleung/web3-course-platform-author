@@ -32,9 +32,6 @@ importers:
       tailwindcss:
         specifier: ^4.1.12
         version: 4.1.12
-      wtf-lll-wallet:
-        specifier: ^0.0.4
-        version: 0.0.4(@types/react@18.3.24)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(use-sync-external-store@1.5.0(react@18.3.1))
       zustand:
         specifier: ^4.4.1
         version: 4.5.7(@types/react@18.3.24)(react@18.3.1)
@@ -1066,11 +1063,6 @@ packages:
     peerDependencies:
       react: ^16.5.1 || ^17.0.0 || ^18.0.0
 
-  lucide-react@0.542.0:
-    resolution: {integrity: sha512-w3hD8/SQB7+lzU2r4VdFyzzOzKnUjTZIF/MQJGSSvni7Llewni4vuViRppfRAa2guOsY5k4jZyxw/i9DQHv+dw==}
-    peerDependencies:
-      react: ^16.5.1 || ^17.0.0 || ^18.0.0 || ^19.0.0
-
   magic-string@0.30.18:
     resolution: {integrity: sha512-yi8swmWbO17qHhwIBNeeZxTceJMeBvWJaId6dyvTSOwTipqeHhMhOrz6513r1sOKnpvQ7zkhlG8tPrpilwTxHQ==}
 
@@ -1365,18 +1357,6 @@ packages:
       utf-8-validate:
         optional: true
 
-  wtf-lll-wallet@0.0.0:
-    resolution: {integrity: sha512-GzEDBPbu2ao+CcMi2fDGPBsAEhYtB2yFLnT3EnCICA6e8cd5MCmTQMp5F+cYig7pYesW7f0gao1/tPUurGaCoA==}
-    peerDependencies:
-      react: ^19.1.1
-      react-dom: ^19.1.1
-
-  wtf-lll-wallet@0.0.4:
-    resolution: {integrity: sha512-qugi+X5hctchEPf+h/YP4l5EP8gK5igzoSp7QE1ePTqqPZl7q/mx786p98/tB9Hlrq9NEf1vUvDJjlkzwh9Usg==}
-    peerDependencies:
-      react: ^19.1.1
-      react-dom: ^19.1.1
-
   yallist@5.0.0:
     resolution: {integrity: sha512-YgvUTfwqyc7UXVMrB+SImsVYSmTS8X/tSrtdNZMImM+n7+QTriRXyXim0mBrTXNeqzVF0KWGgHPeiyViFFrNDw==}
     engines: {node: '>=18'}
@@ -1398,24 +1378,6 @@ packages:
       immer:
         optional: true
       react:
-        optional: true
-
-  zustand@5.0.8:
-    resolution: {integrity: sha512-gyPKpIaxY9XcO2vSMrLbiER7QMAMGOQZVRdJ6Zi782jkbzZygq5GI9nG8g+sMgitRtndwaBSl7uiqC49o1SSiw==}
-    engines: {node: '>=12.20.0'}
-    peerDependencies:
-      '@types/react': '>=18.0.0'
-      immer: '>=9.0.6'
-      react: '>=18.0.0'
-      use-sync-external-store: '>=1.2.0'
-    peerDependenciesMeta:
-      '@types/react':
-        optional: true
-      immer:
-        optional: true
-      react:
-        optional: true
-      use-sync-external-store:
         optional: true
 
 snapshots:
@@ -2304,10 +2266,6 @@ snapshots:
     dependencies:
       react: 18.3.1
 
-  lucide-react@0.542.0(react@18.3.1):
-    dependencies:
-      react: 18.3.1
-
   magic-string@0.30.18:
     dependencies:
       '@jridgewell/sourcemap-codec': 1.5.5
@@ -2547,37 +2505,6 @@ snapshots:
 
   ws@8.17.1: {}
 
-  wtf-lll-wallet@0.0.0(@types/react@18.3.24)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(use-sync-external-store@1.5.0(react@18.3.1)):
-    dependencies:
-      ethers: 6.15.0
-      lucide-react: 0.542.0(react@18.3.1)
-      react: 18.3.1
-      react-dom: 18.3.1(react@18.3.1)
-      tailwindcss: 4.1.12
-      zustand: 5.0.8(@types/react@18.3.24)(react@18.3.1)(use-sync-external-store@1.5.0(react@18.3.1))
-    transitivePeerDependencies:
-      - '@types/react'
-      - bufferutil
-      - immer
-      - use-sync-external-store
-      - utf-8-validate
-
-  wtf-lll-wallet@0.0.4(@types/react@18.3.24)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(use-sync-external-store@1.5.0(react@18.3.1)):
-    dependencies:
-      ethers: 6.15.0
-      lucide-react: 0.542.0(react@18.3.1)
-      react: 18.3.1
-      react-dom: 18.3.1(react@18.3.1)
-      tailwindcss: 4.1.12
-      wtf-lll-wallet: 0.0.0(@types/react@18.3.24)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(use-sync-external-store@1.5.0(react@18.3.1))
-      zustand: 5.0.8(@types/react@18.3.24)(react@18.3.1)(use-sync-external-store@1.5.0(react@18.3.1))
-    transitivePeerDependencies:
-      - '@types/react'
-      - bufferutil
-      - immer
-      - use-sync-external-store
-      - utf-8-validate
-
   yallist@5.0.0: {}
 
   yocto-queue@0.1.0: {}
@@ -2588,9 +2515,3 @@ snapshots:
     optionalDependencies:
       '@types/react': 18.3.24
       react: 18.3.1
-
-  zustand@5.0.8(@types/react@18.3.24)(react@18.3.1)(use-sync-external-store@1.5.0(react@18.3.1)):
-    optionalDependencies:
-      '@types/react': 18.3.24
-      react: 18.3.1
-      use-sync-external-store: 1.5.0(react@18.3.1)

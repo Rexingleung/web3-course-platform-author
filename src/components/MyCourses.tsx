@@ -32,15 +32,15 @@ export function MyCourses() {
 
   if (!isConnected) {
     return (
-      <div className="glass-effect rounded-2xl p-8 text-center card-hover shadow-glass-orange">
-        <div className="w-16 h-16 mx-auto mb-4 bg-gradient-to-br from-author-400 to-crimson-500 rounded-2xl flex items-center justify-center">
+      <div className="p-8 text-center rounded-2xl glass-effect card-hover shadow-glass-orange">
+        <div className="flex justify-center items-center mx-auto mb-4 w-16 h-16 bg-gradient-to-br rounded-2xl from-author-400 to-crimson-500">
           <BookOpen className="text-white" size={32} />
         </div>
-        <h2 className="text-2xl font-bold text-white mb-2">我的课程</h2>
-        <p className="text-white/70 max-w-md mx-auto">
+        <h2 className="mb-2 text-2xl font-bold text-white">我的课程</h2>
+        <p className="mx-auto max-w-md text-white/70">
           请先连接你的钱包以查看和管理你发布的所有课程
         </p>
-        <div className="w-24 h-1 bg-gradient-to-r from-author-400 to-crimson-500 rounded-full mx-auto mt-6"></div>
+        <div className="mx-auto mt-6 w-24 h-1 bg-gradient-to-r rounded-full from-author-400 to-crimson-500"></div>
       </div>
     );
   }
@@ -48,10 +48,10 @@ export function MyCourses() {
   return (
     <div className="space-y-6">
       {/* 标题和操作栏 */}
-      <div className="glass-effect rounded-2xl p-6 shadow-glass-orange">
-        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+      <div className="p-6 rounded-2xl glass-effect shadow-glass-orange">
+        <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
           <div className="flex items-center space-x-4">
-            <div className="w-12 h-12 bg-gradient-to-r from-author-500 to-crimson-500 rounded-xl flex items-center justify-center shadow-glow-orange">
+            <div className="flex justify-center items-center w-12 h-12 bg-gradient-to-r rounded-xl from-author-500 to-crimson-500 shadow-glow-orange">
               <BookOpen className="text-white" size={24} />
             </div>
             <div>
@@ -63,7 +63,7 @@ export function MyCourses() {
           <button
             onClick={loadMyCourses}
             disabled={loading || isLoading}
-            className="flex items-center space-x-2 px-4 py-2 bg-white/10 hover:bg-white/20 border border-white/20 rounded-lg text-white transition-all duration-200 disabled:opacity-50"
+            className="flex items-center px-4 py-2 space-x-2 text-white rounded-lg border transition-all duration-200 bg-white/10 hover:bg-white/20 border-white/20 disabled:opacity-50"
           >
             <RefreshCw className={`${loading ? 'animate-spin' : ''}`} size={16} />
             <span>刷新</span>
@@ -72,41 +72,41 @@ export function MyCourses() {
       </div>
 
       {/* 统计卡片 */}
-      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-        <div className="glass-effect rounded-xl p-4 card-hover">
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
+        <div className="p-4 rounded-xl glass-effect card-hover">
           <div className="flex items-center space-x-3">
-            <div className="w-10 h-10 bg-gradient-to-r from-author-400 to-author-600 rounded-lg flex items-center justify-center">
+            <div className="flex justify-center items-center w-10 h-10 bg-gradient-to-r rounded-lg from-author-400 to-author-600">
               <BookOpen className="text-white" size={20} />
             </div>
             <div>
-              <p className="text-white/60 text-sm">总课程数</p>
-              <p className="text-white text-xl font-bold">{courses.length}</p>
+              <p className="text-sm text-white/60">总课程数</p>
+              <p className="text-xl font-bold text-white">{courses.length}</p>
             </div>
           </div>
         </div>
 
-        <div className="glass-effect rounded-xl p-4 card-hover">
+        <div className="p-4 rounded-xl glass-effect card-hover">
           <div className="flex items-center space-x-3">
-            <div className="w-10 h-10 bg-gradient-to-r from-green-400 to-green-600 rounded-lg flex items-center justify-center">
+            <div className="flex justify-center items-center w-10 h-10 bg-gradient-to-r from-green-400 to-green-600 rounded-lg">
               <Users className="text-white" size={20} />
             </div>
             <div>
-              <p className="text-white/60 text-sm">总学生数</p>
-              <p className="text-white text-xl font-bold">
+              <p className="text-sm text-white/60">总学生数</p>
+              <p className="text-xl font-bold text-white">
                 {courses.reduce((acc, course) => acc + (course.studentsCount || 0), 0)}
               </p>
             </div>
           </div>
         </div>
 
-        <div className="glass-effect rounded-xl p-4 card-hover">
+        <div className="p-4 rounded-xl glass-effect card-hover">
           <div className="flex items-center space-x-3">
-            <div className="w-10 h-10 bg-gradient-to-r from-yellow-400 to-orange-600 rounded-lg flex items-center justify-center">
+            <div className="flex justify-center items-center w-10 h-10 bg-gradient-to-r from-yellow-400 to-orange-600 rounded-lg">
               <TrendingUp className="text-white" size={20} />
             </div>
             <div>
-              <p className="text-white/60 text-sm">总收益</p>
-              <p className="text-white text-xl font-bold">
+              <p className="text-sm text-white/60">总收益</p>
+              <p className="text-xl font-bold text-white">
                 {courses.reduce((acc, course) => acc + parseFloat(course.price || '0'), 0).toFixed(3)} ETH
               </p>
             </div>
@@ -116,41 +116,41 @@ export function MyCourses() {
 
       {/* 课程列表 */}
       {loading || isLoading ? (
-        <div className="glass-effect rounded-2xl p-12 text-center">
-          <RefreshCw className="animate-spin text-white mx-auto mb-4" size={32} />
-          <p className="text-white text-lg">加载课程中...</p>
+        <div className="p-12 text-center rounded-2xl glass-effect">
+          <RefreshCw className="mx-auto mb-4 text-white animate-spin" size={32} />
+          <p className="text-lg text-white">加载课程中...</p>
         </div>
       ) : courses.length === 0 ? (
-        <div className="glass-effect rounded-2xl p-12 text-center card-hover">
-          <div className="w-20 h-20 mx-auto mb-6 bg-gradient-to-br from-author-400/20 to-crimson-500/20 rounded-2xl flex items-center justify-center">
+        <div className="p-12 text-center rounded-2xl glass-effect card-hover">
+          <div className="flex justify-center items-center mx-auto mb-6 w-20 h-20 bg-gradient-to-br rounded-2xl from-author-400/20 to-crimson-500/20">
             <BookOpen className="text-white/50" size={40} />
           </div>
-          <h3 className="text-xl font-semibold text-white mb-3">还没有课程</h3>
-          <p className="text-white/70 mb-6 max-w-md mx-auto">
+          <h3 className="mb-3 text-xl font-semibold text-white">还没有课程</h3>
+          <p className="mx-auto mb-6 max-w-md text-white/70">
             开始创建你的第一门课程，与世界分享你的知识和经验！
           </p>
-          <div className="w-32 h-1 bg-gradient-to-r from-author-400 to-crimson-500 rounded-full mx-auto"></div>
+          <div className="mx-auto w-32 h-1 bg-gradient-to-r rounded-full from-author-400 to-crimson-500"></div>
         </div>
       ) : (
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
           {courses.map((course) => (
             <div
               key={course.id}
-              className="glass-effect rounded-xl p-6 card-hover shadow-glass-orange transition-all duration-300"
+              className="p-6 rounded-xl transition-all duration-300 glass-effect card-hover shadow-glass-orange"
             >
-              <div className="flex items-start justify-between mb-4">
-                <h3 className="text-lg font-semibold text-white line-clamp-2 flex-1">
-                  {course.title}
+              <div className="flex justify-between items-start mb-4">
+                <h3 className="flex-1 text-lg font-semibold text-white line-clamp-2">
+                  title: {course.title}
                 </h3>
-                <div className="ml-4 flex-shrink-0">
-                  <div className="bg-gradient-to-r from-author-500 to-crimson-500 rounded-lg px-3 py-1">
-                    <span className="text-white text-sm font-medium">#{course.id}</span>
+                <div className="flex-shrink-0 ml-4">
+                  <div className="px-3 py-1 bg-gradient-to-r rounded-lg from-author-500 to-crimson-500">
+                    <span className="text-sm font-medium text-white">id: #{course.id}</span>
                   </div>
                 </div>
               </div>
 
-              <p className="text-white/70 text-sm mb-6 line-clamp-3">
-                {course.description}
+              <p className="mb-6 text-sm text-white/70 line-clamp-3">
+              description: {course.description}
               </p>
 
               <div className="grid grid-cols-2 gap-4 mb-6">
@@ -165,33 +165,19 @@ export function MyCourses() {
                 </div>
                 
                 <div className="flex items-center space-x-2 text-white/80">
-                  <Calendar size={16} className="text-blue-400" />
-                  <span className="text-sm">{course.duration}</span>
-                </div>
-                
-                <div className="flex items-center space-x-2 text-white/80">
                   <User size={16} className="text-purple-400" />
-                  <span className="text-sm">作者</span>
+                  <span className="text-sm">作者 {course?.author}</span>
                 </div>
               </div>
 
-              <div className="border-t border-white/10 pt-4">
-                <div className="flex items-center justify-between mb-3">
-                  <span className="text-white/60 text-sm">课程状态</span>
-                  <div className="bg-gradient-to-r from-green-500/20 to-green-400/20 border border-green-400/30 rounded-full px-3 py-1">
-                    <span className="text-green-400 text-sm font-medium">✓ 已发布</span>
+              <div className="pt-4 border-t border-white/10">
+                <div className="flex justify-between items-center mb-3">
+                  <span className="text-sm text-white/60">课程状态</span>
+                  <div className="px-3 py-1 bg-gradient-to-r rounded-full border from-green-500/20 to-green-400/20 border-green-400/30">
+                    <span className="text-sm font-medium text-green-400">✓ 已发布</span>
                   </div>
                 </div>
 
-                {/* 操作按钮 */}
-                <div className="flex gap-2">
-                  <button className="flex-1 bg-gradient-to-r from-author-500/20 to-crimson-500/20 border border-author-400/30 hover:from-author-500/30 hover:to-crimson-500/30 text-author-400 hover:text-author-300 py-2 px-4 rounded-lg transition-all duration-200 text-sm font-medium">
-                    查看统计
-                  </button>
-                  <button className="flex-1 bg-gradient-to-r from-blue-500/20 to-purple-500/20 border border-blue-400/30 hover:from-blue-500/30 hover:to-purple-500/30 text-blue-400 hover:text-blue-300 py-2 px-4 rounded-lg transition-all duration-200 text-sm font-medium">
-                    编辑课程
-                  </button>
-                </div>
               </div>
             </div>
           ))}

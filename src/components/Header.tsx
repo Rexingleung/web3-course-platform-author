@@ -75,11 +75,11 @@ export function Header() {
   }, []);
 
   return (
-    <header className="bg-black bg-opacity-20 backdrop-blur-md border-b border-white border-opacity-10">
-      <div className="container mx-auto px-4 py-4 flex items-center justify-between">
+    <header className="bg-black bg-opacity-20 border-b border-white border-opacity-10 backdrop-blur-md">
+      <div className="container flex justify-between items-center px-4 py-4 mx-auto">
         {/* Logo - Author版本 */}
-        <div className="flex items-center gap-3">
-          <div className="w-10 h-10 bg-gradient-to-br from-orange-400 to-red-600 rounded-xl flex items-center justify-center">
+        <div className="flex gap-3 items-center">
+          <div className="flex justify-center items-center w-10 h-10 bg-gradient-to-br from-orange-400 to-red-600 rounded-xl">
             <PenTool className="text-white" size={20} />
           </div>
           <div>
@@ -89,13 +89,13 @@ export function Header() {
         </div>
 
         {/* Wallet Section */}
-        <div className="flex items-center gap-4">
+        <div className="flex gap-4 items-center">
           {/* Network Selector */}
           {isConnected && (
             <div className="relative" onClick={(e) => e.stopPropagation()}>
               <button
                 onClick={() => setShowNetworkMenu(!showNetworkMenu)}
-                className="flex items-center gap-2 px-3 py-2 bg-white bg-opacity-10 hover:bg-opacity-20 rounded-lg text-white transition-all duration-200"
+                className="flex gap-2 items-center px-3 py-2 text-white bg-black bg-opacity-10 rounded-lg transition-all duration-200 hover:bg-opacity-20"
               >
                 <div className={`w-2 h-2 rounded-full ${
                   networkId === SupportedNetworks.ETHEREUM_MAINNET ? 'bg-green-400' : 'bg-orange-400'
@@ -104,13 +104,12 @@ export function Header() {
                   {networkId ? getNetworkName(networkId) : 'Unknown Network'}
                 </span>
                 <ChevronDown size={16} className={`transform transition-transform ${
-                  showNetworkMenu ? 'rotate-180' : ''
-                }`} />
+                  showNetworkMenu ? 'rotate-180' : ''}`} />
               </button>
 
               {/* Network Dropdown */}
               {showNetworkMenu && (
-                <div className="absolute right-0 mt-2 w-64 bg-white bg-opacity-95 backdrop-blur-md rounded-xl shadow-xl border border-white border-opacity-20 overflow-hidden z-50">
+                <div className="overflow-hidden absolute right-0 z-50 mt-2 w-64 bg-white bg-opacity-95 rounded-xl border border-white border-opacity-20 shadow-xl backdrop-blur-md">
                   <div className="py-2">
                     <button
                       onClick={() => {
@@ -121,7 +120,7 @@ export function Header() {
                         networkId === SupportedNetworks.ETHEREUM_MAINNET ? 'bg-blue-50 text-blue-700' : 'text-gray-700'
                       }`}
                     >
-                      <div className="w-3 h-3 rounded-full bg-green-400" />
+                      <div className="w-3 h-3 bg-green-400 rounded-full" />
                       <div>
                         <div className="font-medium">Ethereum 主网</div>
                         <div className="text-xs text-gray-500">生产环境</div>
@@ -136,7 +135,7 @@ export function Header() {
                         networkId === SupportedNetworks.ETHEREUM_SEPOLIA ? 'bg-blue-50 text-blue-700' : 'text-gray-700'
                       }`}
                     >
-                      <div className="w-3 h-3 rounded-full bg-orange-400" />
+                      <div className="w-3 h-3 bg-orange-400 rounded-full" />
                       <div>
                         <div className="font-medium">Sepolia 测试网</div>
                         <div className="text-xs text-gray-500">测试环境</div>
@@ -153,7 +152,7 @@ export function Header() {
             <button
               onClick={connectWallet}
               disabled={isConnecting}
-              className="flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-orange-600 to-red-600 hover:from-orange-700 hover:to-red-700 text-white rounded-xl font-medium transition-all duration-200 shadow-lg hover:shadow-xl disabled:opacity-50 disabled:cursor-not-allowed"
+              className="flex gap-2 items-center px-6 py-3 font-medium text-white bg-gradient-to-r from-orange-600 to-red-600 rounded-xl shadow-lg transition-all duration-200 hover:from-orange-700 hover:to-red-700 hover:shadow-xl disabled:opacity-50 disabled:cursor-not-allowed"
             >
               {isConnecting ? (
                 <RefreshCw size={18} className="animate-spin" />
@@ -166,13 +165,13 @@ export function Header() {
             <div className="relative" onClick={(e) => e.stopPropagation()}>
               <button
                 onClick={() => setShowDropdown(!showDropdown)}
-                className="flex items-center gap-3 px-4 py-3 bg-white bg-opacity-10 hover:bg-opacity-20 rounded-xl text-white transition-all duration-200"
+                className="flex gap-3 items-center px-4 py-3 text-black bg-white bg-opacity-10 rounded-xl transition-all duration-200 hover:bg-opacity-20"
               >
-                <div className="flex items-center gap-3">
+                <div className="flex gap-3 items-center">
                   {/* ENS头像或默认头像 */}
-                  <div className="w-8 h-8 rounded-full overflow-hidden bg-gradient-to-br from-orange-400 to-red-600 flex items-center justify-center">
+                  <div className="flex overflow-hidden justify-center items-center w-8 h-8 bg-gradient-to-br from-orange-400 to-red-600 rounded-full">
                     {ensAvatar ? (
-                      <img src={ensAvatar} alt="ENS Avatar" className="w-full h-full object-cover" />
+                      <img src={ensAvatar} alt="ENS Avatar" className="object-cover w-full h-full" />
                     ) : (
                       <span className="text-xs font-bold">
                         {address ? address.slice(2, 4).toUpperCase() : 'A'}
@@ -190,18 +189,17 @@ export function Header() {
                   </div>
                 </div>
                 <ChevronDown size={16} className={`transform transition-transform ${
-                  showDropdown ? 'rotate-180' : ''
-                }`} />
+                  showDropdown ? 'rotate-180' : ''}`} />
               </button>
 
               {/* Wallet Dropdown */}
               {showDropdown && (
-                <div className="absolute right-0 mt-2 w-80 bg-white bg-opacity-95 backdrop-blur-md rounded-xl shadow-xl border border-white border-opacity-20 overflow-hidden z-50">
+                <div className="overflow-hidden absolute right-0 z-50 mt-2 w-80 bg-white bg-opacity-95 rounded-xl border border-white border-opacity-20 shadow-xl backdrop-blur-md">
                   <div className="p-4 border-b border-gray-200">
-                    <div className="flex items-center gap-3 mb-3">
-                      <div className="w-10 h-10 rounded-full overflow-hidden bg-gradient-to-br from-orange-400 to-red-600 flex items-center justify-center">
+                    <div className="flex gap-3 items-center mb-3">
+                      <div className="flex overflow-hidden justify-center items-center w-10 h-10 bg-gradient-to-br from-orange-400 to-red-600 rounded-full">
                         {ensAvatar ? (
-                          <img src={ensAvatar} alt="ENS Avatar" className="w-full h-full object-cover" />
+                          <img src={ensAvatar} alt="ENS Avatar" className="object-cover w-full h-full" />
                         ) : (
                           <span className="text-sm font-bold text-white">
                             {address ? address.slice(2, 4).toUpperCase() : 'A'}
@@ -209,31 +207,31 @@ export function Header() {
                         )}
                       </div>
                       <div className="flex-1">
-                        <div className="text-gray-900 font-medium">
+                        <div className="font-medium text-gray-900">
                           {ensName || '作者钱包'}
                         </div>
-                        <div className="text-gray-600 text-sm">
+                        <div className="text-sm text-gray-600">
                           {address ? formatAddress(address) : ''}
                         </div>
                       </div>
                     </div>
                     
                     {/* 余额信息 */}
-                    <div className="bg-gradient-to-r from-orange-50 to-red-50 rounded-lg p-3">
-                      <div className="text-sm text-gray-600 mb-1">钱包余额</div>
+                    <div className="p-3 bg-gradient-to-r from-orange-50 to-red-50 rounded-lg">
+                      <div className="mb-1 text-sm text-gray-600">钱包余额</div>
                       <div className="text-lg font-bold text-gray-900">
                         {formatBalance(balance)} {networkId ? getNetworkSymbol(networkId) : 'ETH'}
                       </div>
-                      <div className="text-xs text-gray-500 mt-1">
+                      <div className="mt-1 text-xs text-gray-500">
                         网络: {networkId ? getNetworkName(networkId) : '未知网络'}
                       </div>
                     </div>
 
                     {/* ENS信息 */}
                     {ensName && (
-                      <div className="mt-3 p-3 bg-blue-50 rounded-lg border border-blue-200">
-                        <div className="text-sm text-blue-600 mb-1">ENS 域名</div>
-                        <div className="text-blue-900 font-medium">{ensName}</div>
+                      <div className="p-3 mt-3 bg-blue-50 rounded-lg border border-blue-200">
+                        <div className="mb-1 text-sm text-blue-600">ENS 域名</div>
+                        <div className="font-medium text-blue-900">{ensName}</div>
                       </div>
                     )}
                   </div>
@@ -242,7 +240,7 @@ export function Header() {
                   <div className="p-2">
                     <button
                       onClick={copyAddress}
-                      className="w-full px-4 py-3 text-left hover:bg-gray-100 rounded-lg flex items-center gap-3 text-gray-700 transition-colors"
+                      className="flex gap-3 items-center px-4 py-3 w-full text-left text-gray-700 rounded-lg transition-colors hover:bg-gray-100"
                     >
                       <Copy size={18} />
                       <span>复制地址</span>
@@ -250,7 +248,7 @@ export function Header() {
                     
                     <button
                       onClick={openBlockExplorer}
-                      className="w-full px-4 py-3 text-left hover:bg-gray-100 rounded-lg flex items-center gap-3 text-gray-700 transition-colors"
+                      className="flex gap-3 items-center px-4 py-3 w-full text-left text-gray-700 rounded-lg transition-colors hover:bg-gray-100"
                     >
                       <ExternalLink size={18} />
                       <span>在区块浏览器中查看</span>
@@ -258,19 +256,19 @@ export function Header() {
                     
                     <button
                       onClick={refreshWallet}
-                      className="w-full px-4 py-3 text-left hover:bg-gray-100 rounded-lg flex items-center gap-3 text-gray-700 transition-colors"
+                      className="flex gap-3 items-center px-4 py-3 w-full text-left text-gray-700 rounded-lg transition-colors hover:bg-gray-100"
                     >
                       <RefreshCw size={18} />
                       <span>刷新钱包信息</span>
                     </button>
                     
-                    <div className="border-t border-gray-200 mt-2 pt-2">
+                    <div className="pt-2 mt-2 border-t border-gray-200">
                       <button
                         onClick={() => {
                           disconnectWallet();
                           setShowDropdown(false);
                         }}
-                        className="w-full px-4 py-3 text-left hover:bg-red-50 rounded-lg flex items-center gap-3 text-red-600 transition-colors"
+                        className="flex gap-3 items-center px-4 py-3 w-full text-left text-red-600 rounded-lg transition-colors hover:bg-red-50"
                       >
                         <LogOut size={18} />
                         <span>断开连接</span>

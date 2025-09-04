@@ -102,14 +102,14 @@ const useContractStore = create<ContractStore>((set, get) => ({
       }
       
       const userAddress = accounts[0];
-      
       // 这里需要根据实际合约接口调整
       // 假设合约有一个方法可以获取作者创建的课程
-      const authorCourseIds = await contract.getAuthorCourses(userAddress);
+      const authorCourseIds = await contract.getMyCreatedCourses(userAddress);
       
       // 获取每个课程的详细信息
       const courses: Course[] = [];
       for (const courseId of authorCourseIds) {
+        
         try {
           const courseData = await contract.getCourse(courseId);
           courses.push({
@@ -120,13 +120,7 @@ const useContractStore = create<ContractStore>((set, get) => ({
             author: courseData[2],
             price: ethers.formatEther(courseData[3]),
             createdAt: Number(courseData[4]),
-            instructor: courseData[2], // 使用作者作为讲师
-            duration: '待定', // 如果合约中没有这个字段
-            difficulty: 'Intermediate' as const,
-            rating: 0, // 初始值
             studentsCount: 0, // 需要从合约获取
-            image: '/placeholder-course.jpg', // 默认图片
-            category: '区块链', // 默认分类
           });
         } catch (error) {
           console.error(`获取课程 ${courseId} 信息失败:`, error);

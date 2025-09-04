@@ -45,16 +45,8 @@ export interface Course {
   id: number;
   title: string;
   description: string;
-  instructor: string;
-  duration: string;
-  difficulty: 'Beginner' | 'Intermediate' | 'Advanced';
   price: string;
-  originalPrice?: string;
-  discount?: number;
-  rating: number;
   studentsCount: number;
-  image: string;
-  category: string;
   isPurchased?: boolean;
   completionPercentage?: number;
   courseId: number;
@@ -78,10 +70,10 @@ export interface ContractState {
 
 export interface ContractActions {
   initializeContract: () => Promise<void>;
-  createCourse: (title: string, description: string, price: string) => Promise<void>;
+  createCourse: (title: string, description: string, price: string) => Promise<{ transactionHash: any; courseId: any; gasUsed: any; }>;
   getMyCourses: () => Promise<Course[]>;
-  updateCourse: (courseId: number, title: string, description: string, price: string) => Promise<void>;
-  deleteCourse: (courseId: number) => Promise<void>;
+  updateCourse: (courseId: number, title: string, description: string, price: string) => Promise<{ transactionHash: any; gasUsed: any; }>;
+  deleteCourse: (courseId: number) => Promise<{ transactionHash: any; gasUsed: any; }>;
   getCourseStats: (courseId: number) => Promise<{
     totalSales: number;
     studentsCount: number;
